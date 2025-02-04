@@ -1,5 +1,6 @@
 # Ignore appsettings.json
-appsettings.json
+appsettings.Development.json
+appsettings.Production.json
 
 # Ignore Visual Studio files
 .vs/
