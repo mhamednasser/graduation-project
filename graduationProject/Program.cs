@@ -51,11 +51,8 @@ namespace graduationProject
                 client.DefaultRequestHeaders.Add("Authorization", $"Bearer {builder.Configuration["OpenAI:ApiKey"]}");
             });
 
-            // Add HttpClient for PythonApiService
-            builder.Services.AddHttpClient<PythonApiService>(client =>
-            {
-                client.BaseAddress = new Uri("http://127.0.0.1:8000/"); //  Python API URL
-            });
+            // HttpClient for PythonApiService
+            builder.Services.AddHttpClient<PythonApiService>();
             // Add Scoped services for other services (if any)
             builder.Services.AddScoped<IPlanGenerationService, PlanGenerationMockService>();   // PlanGenerationMockService           PlanGenerationService
 
