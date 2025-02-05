@@ -1,24 +1,25 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using System.IO;
+using Microsoft.Extensions.Configuration;
 
 public class PythonApiService
 {
     private readonly HttpClient _httpClient;
+    private readonly string _baseUrl;
 
-    public PythonApiService(HttpClient httpClient)
+    public PythonApiService(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
+        _baseUrl = configuration["PythonApi:BaseUrl"]; // Read the base URL from configuration
     }
 
-    // This method calls the Python API and returns the raw JSON response as a string
     public async Task<string> PredictNutritionalInfoAsync(IFormFile image)
     {
         var content = new MultipartFormDataContent();
-        content.Add(new StreamContent(image.OpenReadStream()), "image", image.FileName);  
+        content.Add(new StreamContent(image.OpenReadStream()), "image", image.FileName);
 
-        var response = await _httpClient.PostAsync("http://127.0.0.1:8000/predict", content);
+        var response = await _httpClient.PostAsync($"{_baseUrl}/predict", content);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -26,7 +27,6 @@ public class PythonApiService
             throw new Exception($"Error from Python API: {error}");
         }
 
-        return await response.Content.ReadAsStringAsync(); // Return raw JSON as string  erg3 tany leh !!!
+        return await response.Content.ReadAsStringAsync(); // Return raw JSON as string
     }
-
 }
